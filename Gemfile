@@ -6,7 +6,7 @@ gem "rails", "~> 8.0.2"
 gem "propshaft"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
-gem 'passenger', '~> 5.0', '>= 5.0.30'
+gem 'passenger', '~> 6.1'
 gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
