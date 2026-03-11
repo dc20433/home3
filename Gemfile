@@ -44,3 +44,6 @@ gem "dotenv-rails"
 gem "nested_scaffold"
 gem "devise"
 gem "ransack"
+
+gem "bootstrap", "~> 5.3.3"
+gem "dartsass-rails"
