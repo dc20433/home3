@@ -1,0 +1,64 @@
+<% if (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+<%= render "layouts/navbar" %>
+  
+  <h2 class="text-center">Patient Information as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
+
+  <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+
+  <table class="table table-sm table-striped table-hover mt-2">
+    <thead class="table-success fs-6">
+    <tr style="height:13px">
+        <th>Name</th>
+        <th>Date Entered</th>
+        <th>Contact Info</th>
+        <th>Weight</th>
+        <th>Complaints</th>
+        <th>Onset/Pain</th>
+        <th>Referred</th>
+        <th>Health History</th>
+      </tr>
+    </thead>
+    </tbody>
+      <% @name = 0 %>
+      <% Patient.joins(:regi).order("last_name, first_name, init, dob, v_date DESC").each do |patient| %>
+        <tr style="height:15px">
+        <td>
+        <% @prefix = Regi.find(id=patient.regi_id) %>
+        <% @name != @prefix ? show_name = @prefix.last_name + ", " + @prefix.first_name + " " + @prefix.init : show_name = " " %>
+        <%= link_to show_name, regi_patient_path(patient.regi_id, patient) %>
+        </td>
+        <% @name = @prefix %>
+          <td>
+          <%= patient.v_date %>
+          </td>
+          <td>
+            <%= patient.street %><%= ', ' if patient.street? %>
+            <%= patient.city %>
+            <%= patient.state %>
+            <%= patient.zip %>
+            <%= 'C: ' if patient.cell? %><%= patient.cell %>
+            <%= 'H: ' if patient.home? %><%= patient.home %>
+            <%= 'W: ' if patient.work? %><%= patient.work %>
+            <%= 'E: ' if patient.email? %><%= patient.email %>
+          </td>
+          <td><%= patient.weight %></td>
+          <td>
+            <%= '1.' if patient.com1? %>
+            <%= patient.com1.strip %><%= '; 2.' if patient.com2? %>
+            <%= patient.com2.strip %><%= '; 3.' if patient.com3? %>
+            <%= patient.com3.strip %>
+          </td>
+          <td>
+            <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
+            <%= patient.pain_scale %>
+          </td>
+          <td><%= patient.referred %></td>
+          <td>
+            <%= patient.di_list.to_sentence.gsub(/_/, ' ').gsub(/;/, '') %><%= ', ' if patient.o_dis? %>
+            <%= patient.o_dis %><%= ', Preg' if patient.preg == 'Yes' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
