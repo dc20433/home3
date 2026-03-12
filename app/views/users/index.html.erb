@@ -1,0 +1,73 @@
+<% if current_user && current_user.Admin? %>
+<%= render "layouts/navbar" %>
+
+  <div 
+    class="screen"
+    style="background-image: url(<%= asset_path 'pine_trees.jpg' %> );">
+    <div class="color-overlay d-flex justify-content-center">  
+      <div class="card mt-3 mx-auto border-primary" style="width: 44rem;">
+        <div class="card shadow border-dark">
+          <div class="card-header">
+            <h2 class="card-title text-center mt-3">PERMITTED USERS as at <%= Time.now.in_time_zone("America/New_York").strftime("%m-%d-%Y %H:%m") %></h2>
+          </div>
+          <div class="card-body">
+            <table class="table table-sm table-striped table-hover mx-auto mt-1 fs-6" style="max-width: 800px">
+              <thead class="table-primary">
+                <tr>
+                  <th>Sign-in Email</th>
+                  <th>Role</th>
+                  <th>Sign-in Time</th>
+                  <th>Last Seen</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @users.order('role, email', 'current_sign_in_at DESC').each do |user| %>
+                <tr>
+                  <td><%= link_to_unless_current user.email, user_path(user.id) %></td>
+                  <td><%= user.role %></td>
+                  <td><%= user.current_sign_in_at.in_time_zone("America/New_York").strftime("%H:%M %m-%d-%y") %></td>
+                  <td><%= user.last_sign_in_at.in_time_zone("America/New_York").strftime("%H:%M %m-%d-%y") %></td>
+                  <td class="align-middle"><%= user.sign_in_count %></td>
+                </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card shadow border-dark">
+          <div class="card-header">
+            <h2 class="card-title text-center mt-3">Usage Statistics</h2>
+          </div>
+          <div class="card-body fs-6">
+            <table class="table table-sm table-striped table-hover mx-auto mt-0" style="max-width: 800px">
+              <thead class="table-primary">
+                <tr>
+                  <th>Patients</th>
+                  <th>Male</th>
+                  <th>Female</th>
+                  <th>Other</th>
+                  <th>Records</th>
+                  <th>Charts</th>
+                  <th>Files</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="col">
+                  <td class="align-middle"><%= Regi.count %></td>
+                  <td class="align-middle"><%= Regi.where(gender: "Male").count %></td>
+                  <td class="align-middle"><%= Regi.where(gender: "Female").count %></td>
+                  <td class="align-middle"><%= Regi.count - Regi.where(gender: "Male").count - Regi.where(gender: "Female").count %></td>
+                  <td class="align-middle"><%= Patient.count %></td>
+                  <td class="align-middle"><%= Chart.count %></td>
+                  <td class="align-middle"><%= Filing.count %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+  
