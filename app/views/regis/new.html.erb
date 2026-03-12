@@ -1,11 +1,3 @@
-<% content_for :title, "New regi" %>
-
-<h1>New regi</h1>
-
-<%= render "form", regi: @regi %>
-
-<br>
-
-<div>
-  <%= link_to "Back to regis", regis_path %>
-</div>
+<% if (current_user && current_user.Patient?) || (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+  <%= render "display", regi:@regi %>
+<% end %>

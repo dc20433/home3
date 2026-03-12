@@ -1,5 +1,5 @@
-<h1>New chart</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Back', regi_charts_path(@chart.regi) %>
+<% if (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+  <h1 class="text-center">Create New Chart</h1>
+  <%= render 'layouts/identifier' %>
+    <%= render 'form' %>
+<% end %>
