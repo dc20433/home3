@@ -1,5 +1,5 @@
 class PatientsController < ApplicationController
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   before_action :set_regi
   before_action :set_patient, only: [:show, :edit, :update, :destroy]
 
@@ -30,8 +30,8 @@ class PatientsController < ApplicationController
     @patient = @regi.patients.build(patient_params)
 
     if @patient.save
-      # redirect_to regi_patients_path(@regi), notice:'Patient Record Created...'
-      redirect_to consent_path, notice: "Patient Record Created..."
+      redirect_to regi_patients_path(@regi), notice:'Patient Record Created...'
+      # redirect_to consent_path, notice: "Patient Record Created..."
     else
       render action: 'new'
     end
@@ -64,6 +64,6 @@ class PatientsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def patient_params
-      params.require(:patient).permit(:name, :v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, :cell, :home, :work, :email, :referred, :com1, :com2, :com3, :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, :preg, :preg_wks, :regi_id, di_list:[])
+      params.require(:patient).permit(:v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, :cell, :home, :work, :email, :referred, :com1, :com2, :com3, :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, :preg, :preg_wks, :regi_id, di_list:[])
     end
 end

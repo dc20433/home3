@@ -1,5 +1,5 @@
 class FilingsController < ApplicationController
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   before_action :set_regi
   before_action :set_filing, only: [:show, :edit, :update, :destroy]
 

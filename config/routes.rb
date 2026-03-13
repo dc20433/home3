@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get 'overviews/chart_date'
   get 'consent' => 'sites#consent'
   get 'no_consent' => 'sites#no_consent'
+
+  get 'filings/image/:id', to: 'filings#image', as: 'image_regi_filing'
   
   root 'sites#home'
 end
