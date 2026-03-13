@@ -1,6 +1,17 @@
 <%= render "layouts/navbar" %>
 
-<%# if (current_user && current_user.Patient?) || (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+<%# if (current_user && current_user.Patient?) %>
+  <head>
+    <script type="text/javascript">
+    window.history.forward();
+    function noback() { window.history.forward(); }
+    </script>
+  </head>
+  <body onload="noback();"
+  onpageshow="if (event.persisted) noback();" onunload="">
+<% end %>
+
+<% if (current_user && current_user.Patient?) || (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
   <%= form_with(model: [@regi, @patient]) do |f| %>
     <% if @patient.errors.any? %>
       <div id="error_explanation">
@@ -57,35 +68,37 @@
         <b><%= f.label :email, "Email", class:"form-label mt-1 mb-0" %></b>
         <%= f.email_field :email, class: "form-control form-control-sm border-primary fs-4" %>
       </div>
+      
     </div>
 
     <div class="row fs-6">
-      <div class="col-md-2">
-        <b><%= f.label :height, "Height", class:"form-label mt-1 mb-0" %></b>
-        <%= f.number_field :height, step: 0.1, class: "form-control form-control-sm border-primary fs-4" %>
-      </div>
-      <div class="col-md-2">
-        <b><%= f.label :weight, "Weight", class:"form-label mt-1 mb-0" %></b>
-        <%= f.number_field :weight, step: 0.1, class: "form-control form-control-sm border-primary fs-4" %>
-      </div>
-      <div class="col-md-2">
-        <b><%= f.label :m_stat, "Marital Status", class:"form-label mt-1 mb-0" %></b><br>
-        <%= f.select :m_stat, Patient::MARITAL_STATUS, class: "form-select" %>
-      </div>
-
-      <div class="col-md-2">
-        <b><%= f.label :occup, "Occupation", class:"form-label mt-1 mb-0" %></b>
-        <%= f.text_field :occup, class: "form-control form-control-sm border-primary fs-4" %>
-      </div> 
-      <div class="col-md-2">
-        <b><%= f.label :company, "Company", class:"form-label mt-1 mb-0" %></b>
-        <%= f.text_field :company, class: "form-control form-control-sm border-primary fs-4" %>
-      </div> 
-      <div class="col-md-2">
-        <b><%= f.label :referred, "Referred by", class:"form-label mt-1 mb-0" %></b>
-        <%= f.text_field :referred, class: "form-control form-control-sm border-primary fs-4" %>
-      </div> 
+    <div class="col-md-2">
+      <b><%= f.label :height, "Height", class:"form-label mt-1 mb-0" %></b>
+      <%= f.number_field :height, step: 0.1, class: "form-control form-control-sm border-primary fs-4" %>
     </div>
+    <div class="col-md-2">
+      <b><%= f.label :weight, "Weight", class:"form-label mt-1 mb-0" %></b>
+      <%= f.number_field :weight, step: 0.1, class: "form-control form-control-sm border-primary fs-4" %>
+    </div>
+    <div class="col-md-2">
+      <b><%= f.label :m_stat, "Marital Status", class:"form-label mt-1 mb-0" %></b><br>
+      <%= f.select :m_stat, Patient::MARITAL_STATUS, class: "form-select" %>
+    </div>
+
+    <div class="col-md-2">
+    <b><%= f.label :occup, "Occupation", class:"form-label mt-1 mb-0" %></b>
+    <%= f.text_field :occup, class: "form-control form-control-sm border-primary fs-4" %>
+  </div> 
+  <div class="col-md-2">
+    <b><%= f.label :company, "Company", class:"form-label mt-1 mb-0" %></b>
+    <%= f.text_field :company, class: "form-control form-control-sm border-primary fs-4" %>
+  </div> 
+  <div class="col-md-2">
+    <b><%= f.label :referred, "Referred by", class:"form-label mt-1 mb-0" %></b>
+    <%= f.text_field :referred, class: "form-control form-control-sm border-primary fs-4" %>
+  </div> 
+
+  </div>
 
     <div class="row fs-6">
       <div class="col-md-4">
@@ -157,9 +170,24 @@
     </div>
     <br>
 
+    <b>NOTICE OF PRIVACY PRACTICES PATIENT ACKNOWLEDGMENT:</b><br>
+    I consent to acupuncture treatments and other procedures associated with Chinese Medicine by the practitioner at Zhang's Acupuncture, Inc. I understand that the methods of treatment may include, but not limited to acupuncture and Chinese herbs. By voluntarily signing below I show that I have read, or have had read to me, this consent to treatment I have been told about the risks and benefits of acupuncture and other procedures, and have had all opportunity to ask questions. I intend this consent form to cover the entire course of treatment for my present and future conditions for which I seek treatment.<br><br>
+    I understand that, under The Health Insurance Portability Accountability of 1996, I have certain rights to privacy in regards to my protected health information (PHI). I have received, read and understood The Notice of Privacy Practice.
+    The Practice reserves the right to change the terms of its Notice of Privacy Practice. I understand the Practice will provide current Notice of Practice on request.
+  <br><br>
+
     <div class="btn-group" role="group">
-      <%= f.submit "Submit", data: { burbo: false}, class:'btn btn-success btn-sm m-2 ps-4 pe-4 rounded-pill' %>
-      <%# button_to 'Delete', [@regi,@patient], method: :delete, class:"btn btn-danger btn-sm rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: 'Are you sure?' }  } %>
+      <% if (current_user && current_user.Patient?) %>
+        <%= f.submit "Consent", data: { burbo: false}, :disable_with => "processing", class:'btn btn-success btn-sm m-2 ps-4 pe-4 rounded-pill' %>
+      <% elsif (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+        <%= f.submit "Submit", data: { burbo: false}, class:'btn btn-success btn-sm m-2 ps-4 pe-4 rounded-pill' %>
+      <% end %>
   <% end %>
+      <% if (current_user && current_user.Patient?) %>
+        <%= link_to 'No Consent', no_consent_path, class:"btn btn-danger btn-sm rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: 'Are you sure?' }  } %>
+      <% elsif (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+        <%= button_to 'Delete', [@regi,@patient], method: :delete, class:"btn btn-danger btn-sm rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: 'Are you sure?' }  } %>
+        <%= link_to "Previous Page", :back, class:'btn btn-success btn-sm rounded-pill px-3 m-2 fw-bold' %>
+      <% end %>
     </div>
 <%# end %>

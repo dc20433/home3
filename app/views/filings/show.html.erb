@@ -1,4 +1,4 @@
-<% if (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+
   <%= render 'layouts/identifier' %>
 
   <table class="table table-sm table-striped table-hover mt-1">
@@ -26,4 +26,3 @@
     <%= button_to "Delete", [@regi,@filing], method: :delete, class:"btn btn-sm btn-danger m-2 rounded-pill", form: { data: { turbo_confirm: "Are you sure?" } } %>
     <%= link_to 'Return', regi_filings_path(@filing.regi), class: "btn btn-sm btn-primary m-2 rounded-pill" %>
   </div>
-<% end %>

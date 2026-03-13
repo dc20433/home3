@@ -1,5 +1,8 @@
+<%# if (current_user && current_user.Manager?) || (current_user && current_user.Patient?) || (current_user && current_user.Admin?) %>
 <%= render "layouts/navbar" %>
 
+  <%# if (current_user && current_user.Patient?) %>
+  <%# end %>
     <head>
       <script type="text/javascript">
       window.history.forward();
@@ -25,6 +28,12 @@
             <table class="table table-sm table-striped table-hover mx-auto mt-1">
               <thead class="table-primary fs-6 pt">
                 <tr>
+                <%# if (current_user && current_user.Patient?) %>
+                  <th>Last Name</th>
+                  <th>First Name</th>
+                  <th>M.I.</th>
+                  <th></th>
+                <%# elsif (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
                   <th>Last Name</th>
                   <th>First Name</th>
                   <th>M.I.</th>
@@ -32,11 +41,20 @@
                   <th>Age</th>
                   <th style="width:160px">Date of Birth</th>
                   <th  style="width:190px"></th>
+                <%# end %>
                 </tr>
               </thead>
             <% @regis.each do |regi| %>
 
               <tr>
+              <%# if (current_user && current_user.Patient?) %>
+                <td><%= regi.last_name %></td>
+                <td><%= regi.first_name %></td>
+                <td><%= regi.init? ? regi.init + "." : "" %></td>
+                <td>
+                <%= link_to 'Info', regi_patients_path(regi.id), :disable_with => "processing", class: "btn btn-outline-primary btn-sm outline-double rounded-pill px-3 py-0 fw-bold" %>
+                </td>
+              <%# elsif (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
                 <td><%= link_to regi.last_name, regi_path(regi.id) %></td>
                 <td><%= regi.first_name %></td>
                 <td><%= regi.init? ? regi.init + "." : "" %></td>
@@ -48,6 +66,7 @@
                   <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-outline-info btn-sm outline-double rounded-pill px-1 py-0 fw-bold" %>
                   <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-outline-success btn-sm outline-double rounded-pill px-2 py-0 fw-bold" %>
                 </td>
+              <%# end %>
               </tr>
               <% end %>
             </table>
@@ -57,3 +76,4 @@
   </div>
 </div>
 
+<%# end %>

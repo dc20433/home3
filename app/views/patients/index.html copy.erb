@@ -1,5 +1,7 @@
+<% if (current_user && current_user.Patient?) || (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
 <%= render "layouts/navbar" %>
 
+<% if (current_user && current_user.Patient?) %>
   <head>
     <script type="text/javascript">
     window.history.forward();
@@ -8,17 +10,23 @@
   </head>
   <body onload="noback();"
   onpageshow="if (event.persisted) noback();" onunload="">
+<% end %>
 
   <h1 class="text-center">Patient Information</h1>
   <%= render 'layouts/identifier' %>
+  <% if (current_user && current_user.Patient?) %>
+    <%= link_to 'New Record', new_regi_patient_path, :disable_with => "processing", class:'btn btn-sm btn-outline-dark m-1 rounded-pill' %>
+  <% end %>
+  <% if (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
     <%= link_to 'New Record', new_regi_patient_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
     <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
     <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
     <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
     <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-2 py-0 m-1 fw-bold" >Print This Page</button>
+  <% end %>
   <table class="table table-sm table-striped table-hover mt-1">
     <thead class="table-success fs-6">
-      <tr>
+    <tr>
         <th style="width:105px">Dated on</th>
         <th>Contact Info</th>
         <th>Weight</th>
@@ -33,7 +41,11 @@
       <% @regi.patients.order("v_date DESC").each do |patient| %>
         <tr>
           <td>
-            <%= link_to patient.v_date, regi_patient_path(@regi,patient) %>
+            <% if (current_user && current_user.Patient?)%>
+              <%= patient.v_date %> 
+            <% elsif (current_user && current_user.Manager?) || (current_user && current_user.Admin?) %>
+              <%= link_to patient.v_date, regi_patient_path(@regi,patient) %>
+            <% end %>
           </td>  
           <td>
             <%= patient.street %><%= ', ' if patient.street? %>
@@ -49,10 +61,10 @@
             <%= patient.weight %>
           </td>
           <td>
-            <%# '1.' if patient.com1? %>
-            <%# patient.com1.strip %><%# '; 2.' if patient.com2? %>
-            <%# patient.com2.strip %><%# '; 3.' if patient.com3? %>
-            <%# patient.com3.strip %>
+            <%= '1.' if patient.com1? %>
+            <%= patient.com1.strip %><%= '; 2.' if patient.com2? %>
+            <%= patient.com2.strip %><%= '; 3.' if patient.com3? %>
+            <%= patient.com3.strip %>
           </td>
           <td>
             <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
@@ -67,3 +79,4 @@
       <% end %>
     </tbody>
   </table>
+<% end %>
